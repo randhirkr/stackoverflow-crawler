@@ -6,9 +6,18 @@ import requests
 # https://stackoverflow.com/questions/tagged/amazon-web-services?tab=Votes
 # https://stackoverflow.com/questions/tagged/amazon-web-services?tab=Bounties
 
-resp = requests.get('https://stackoverflow.com/questions/tagged/amazon-web-services?tab=Newest')
-if resp.status_code == 200:
-    print(resp.content)
+response = requests.get('https://stackoverflow.com/questions/tagged/amazon-web-services?tab=Newest')
+if response.status_code == 200:
+    page_content = BeautifulSoup(response.content, 'html.parser')
+    question_list = page_content.find_all(class_='question-summary')
+    # print(question_list)
+    for question in question_list:
+        topic = question.find(class_='question-hyperlink').get_text()
+        print(topic)
+        url = question.find(class_='question-hyperlink').get('href', '/')
+        print("https://stackoverflow.com"+url)
+        print()
+
 
 # Fetches all anchor links in page
 def fetchlinks():
